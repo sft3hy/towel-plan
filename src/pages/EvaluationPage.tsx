@@ -18,7 +18,7 @@ export function EvaluationPage() {
         title="A harness, golden sets, and a gate that says no"
         lead={
           <>
-            Every open decision — embedding model, reranker, chunk sizes, chat distillation, link expansion — is settled by
+            Every open decision — reranker, chunk sizes, chat distillation, link expansion, and the embedder’s truncation level — is settled by
             measurement, not opinion. Retrieval metrics run without an LLM on every commit; judged answer metrics run the
             real stack; regressions fail CI.
           </>

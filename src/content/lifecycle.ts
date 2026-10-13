@@ -116,7 +116,7 @@ export const TOOLBOX: ToolChip[] = [
   { name: 'search_tickets', mode: 'meaning + structure filters', stage: 10, status: 'available-at' },
   { name: 'get_ticket', mode: 'full ticket + linked-issue summaries', stage: 10, status: 'available-at' },
   { name: 'follow_links', mode: 'depth ≤ 2, visibility rules', stage: 11, status: 'available-at' },
-  { name: 'search_pages', mode: 'ColPali-style late interaction', stage: 15, status: 'deferred' },
+  { name: 'search_pages', mode: 'EmbeddingGemma 2 multimodal embeddings, then ColPali-style late interaction if needed', stage: 15, status: 'deferred' },
   { name: 'search_entities', mode: 'extracted graph + neighborhoods', stage: 15, status: 'deferred' },
 ]
 

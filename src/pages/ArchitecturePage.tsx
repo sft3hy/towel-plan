@@ -208,7 +208,7 @@ export function ArchitecturePage() {
           Why the architecture looks like this
         </h2>
         <p className="band__lead">
-          Nine key decisions carry the design — each links to its full record.
+          {KEY_DECISIONS.length} key decisions carry the design — each links to its full record.
         </p>
         <div className="grid grid--decisions">
           {KEY_DECISIONS.slice(0, 6).map((d) => (

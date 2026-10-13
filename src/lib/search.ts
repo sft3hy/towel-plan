@@ -30,6 +30,7 @@ const GLOSSARY: Array<[string, string]> = [
   ['Service context', 'Ingestion-only context that bypasses ACL filtering but never the app boundary'],
   ['RLS', 'Postgres row-level security enforcing app and ACL predicates inside the database'],
   ['RRF', 'Reciprocal rank fusion: merges ranked lists using ranks instead of incomparable scores'],
+  ['EmbeddingGemma 2', 'Self-hosted Apache-2.0 embedder (google/embeddinggemma-2): dense 768-dim for text and code, native image/video/audio into the same vector space for Stage 15A, no embedding egress'],
   ['Derived unit', 'A model-generated unit (Q&A or summary) that always cites the raw source it came from'],
   ['Evidence ledger', 'Per-run record of every hit shown to the agent, with citation ids'],
   ['First move', 'Optional initial step that decomposes the question and seeds evidence before the agent loop'],

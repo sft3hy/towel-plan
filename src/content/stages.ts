@@ -140,7 +140,7 @@ export const STAGES: StageMeta[] = [
     topic: 'retrieval',
     visible: '`towel search` with fused results',
     gate: 'make gate-5',
-    tags: ['RRF on ranks', 'per-collection HNSW', 'embedding cache', 'QueryService', 'isolation harness'],
+    tags: ['EmbeddingGemma 2 (self-hosted)', 'RRF on ranks', 'per-collection HNSW', 'embedding cache', 'QueryService', 'isolation harness'],
   },
   {
     n: 6,
@@ -275,7 +275,7 @@ export const STAGES: StageMeta[] = [
     gate: 'make gate-15a … (mini-stage per extension)',
     tags: ['visual_doc', 'entity_graph', 'silo isolation', 'SCIP refs', 'MRs & branches', 'more connectors'],
     subStages: [
-      { id: '15A', name: 'visual_doc profile', focus: 'Late-interaction page retrieval (ColPali-style) for scanned/chart-heavy docs.' },
+      { id: '15A', name: 'visual_doc profile', focus: 'EmbeddingGemma 2 multimodal mode first — page images/video/audio embedded into the same 768-dim space as text — then ColPali-style late interaction if that underperforms on charts.' },
       { id: '15B', name: 'entity_graph profile', focus: 'LLM entity extraction + PageRank-style graph if multi-hop still fails.' },
       { id: '15C', name: 'Silo isolation', focus: 'Per-app schema/database, encryption keys, dedicated workers.' },
       { id: '15D', name: 'Precise code references', focus: 'SCIP indexers replace heuristic resolved=false references.' },

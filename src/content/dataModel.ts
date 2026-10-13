@@ -53,7 +53,7 @@ export const DATA_RULES: DataRule[] = [
   {
     kind: 'invariant',
     title: 'One embedding model per collection',
-    body: 'Fixed in the collection config. The ANN index is a per-collection partial HNSW index with an expression cast to the collection’s dimension, so one collection’s vectors never affect another’s recall.',
+    body: 'Fixed in the collection config; the platform default is EmbeddingGemma 2 at native 768 dims, so v1 collections share one self-hosted model and one vector space. The ANN index is a per-collection partial HNSW index with an expression cast to the collection’s dimension, so one collection’s vectors never affect another’s recall.',
   },
   {
     kind: 'invariant',
@@ -83,7 +83,7 @@ export const PROFILE_MATRIX: ProfileRow[] = [
   { profile: 'code', segmenter: 'AST chunks', indexes: 'lexical (code tokenizer), trigram, symbols, dense', tools: 'find_symbol · find_references', delivered: 'Stage 8', status: 'stage', usedBy: 'ctrl-f: gitlab' },
   { profile: 'thread', segmenter: 'thread / conversation', indexes: 'lexical, dense', tools: 'search_threads · read_thread', delivered: 'Stage 9', status: 'stage', usedBy: 'ctrl-f: chat' },
   { profile: 'ticket', segmenter: 'overview + comment groups', indexes: 'lexical, dense, attribute filters', tools: 'search_tickets · get_ticket', delivered: 'Stage 10', status: 'stage', usedBy: 'ctrl-f: jira' },
-  { profile: 'visual_doc', segmenter: 'page images', indexes: 'late-interaction vectors', tools: 'search_pages', delivered: 'Stage 15A · if needed', status: 'deferred', usedBy: '—' },
+  { profile: 'visual_doc', segmenter: 'page images', indexes: 'shared 768-d multimodal vectors, or late-interaction vectors', tools: 'search_pages', delivered: 'Stage 15A · if needed', status: 'deferred', usedBy: '—' },
   { profile: 'entity_graph', segmenter: 'entity extraction', indexes: 'graph', tools: 'search_entities', delivered: 'Stage 15B · if needed', status: 'deferred', usedBy: '—' },
 ]
 
@@ -99,7 +99,7 @@ export interface CtrlFCollection {
 }
 
 export const CTRLF_COLLECTIONS: CtrlFCollection[] = [
-  { name: 'gitlab', description: 'Source code for all GitLab projects', profile: 'code', connector: 'gitlab · groups: platform, payments · webhook sync', extras: ['embedding: code-embedder · dim 1024', 'cursor: last indexed commit SHA'] },
+  { name: 'gitlab', description: 'Source code for all GitLab projects', profile: 'code', connector: 'gitlab · groups: platform, payments · webhook sync', extras: ['embedding: embeddinggemma-2 · dim 768', 'cursor: last indexed commit SHA'] },
   { name: 'confluence', description: 'How-to docs, runbooks, and design docs', profile: 'structured_doc', connector: 'confluence · spaces ENG, OPS', extras: ['enrich: contextual_prefix'] },
   { name: 'jira', description: 'Tickets with comments, status, and links', profile: 'ticket', connector: 'jira · projects PAY, PLAT', extras: ['JQL updated incremental sync'] },
   { name: 'chat', description: 'Team chat threads (informal, may be outdated)', profile: 'thread', connector: 'slack · channels infra, payments', extras: ['enrich: qa_distill (optional)', 'DMs never ingested'] },

@@ -14,8 +14,8 @@ export function DecisionsPage() {
         title="Choices, alternatives, costs — and the honest unknowns"
         lead={
           <>
-            Nine headline decisions, seven deferred-to-measurement choices, ten questions that need a human answer, and
-            an eleven-row risk register. Where the plan itself states alternatives and costs, they are recorded; where it
+            {KEY_DECISIONS.length} headline decisions, {DEFERRED_DECISIONS.length} deferred-to-measurement choices, {OPEN_QUESTIONS.length} questions that need a human answer, and
+            an {RISK_REGISTER.length}-row risk register. Where the plan itself states alternatives and costs, they are recorded; where it
             doesn’t, the field is omitted rather than invented.
           </>
         }

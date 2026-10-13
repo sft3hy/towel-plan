@@ -42,6 +42,14 @@ export const KEY_DECISIONS: Decision[] = [
     srcRef: { id: '4-tech-stack-repo-layout-and-conventions', label: '§4 Tech stack' },
   },
   {
+    id: 'embedder',
+    decision: 'Self-hosted embedder',
+    choice: 'EmbeddingGemma 2 (google/embeddinggemma-2, Apache 2.0), dense 768-dim, self-hosted',
+    why: 'One model covers text and code now and natively encodes images, video, and audio into the same 768-dim space, which makes Stage 15A media retrieval a mode of the existing embedder rather than new index technology. Runs on consumer hardware, so embedding requires no egress. Model card (vendor-reported): MTEB multilingual mean 61.36, MTEB code NDCG@10 78.68; treated as directional until Stage 13 re-validates on Towel’s own data.',
+    costs: 'Inputs are capped at 1,024 subword tokens for embedding (observed locally), so segmenters must stay under it; weights must be bfloat16/float32, not float16; queries need the model card’s task prefixes (SearchQuery/Document, CodeRetrieval for code). Hosted embedders stay implementable behind the same Embedder protocol; Matryoshka truncation to 512/256 is a measured cost option.',
+    srcRef: { id: '4-tech-stack-repo-layout-and-conventions', label: '§4 Tech stack' },
+  },
+  {
     id: 'isolation',
     decision: 'Isolation',
     choice: 'Pooled storage, row-level security, per-collection indexes, mandatory filters',
@@ -115,7 +123,7 @@ export const KEY_DECISIONS: Decision[] = [
 ]
 
 export const DEFERRED_DECISIONS = [
-  { decision: 'Embedding model per collection', until: 'Provider chosen in Stage 5 by availability and egress policy; choice confirmed by Stage 13' },
+  { decision: 'Embedding model per collection', until: 'EmbeddingGemma 2 self-hosted at native 768 dims (decided); Matryoshka truncation to 512/256 held as cost options — Stage 13' },
   { decision: 'Reranker', until: 'BGE Reranker v2-m3 (local), off until it shows uplift — Stages 12 & 13' },
   { decision: 'Chunk sizes per profile', until: 'Defaults in stage specs; Stage 13 sweeps decide' },
   { decision: 'Postgres FTS vs BM25 extension or search engine', until: 'Postgres FTS unless Stage 13 shows a ranking gap' },
@@ -127,8 +135,8 @@ export const DEFERRED_DECISIONS = [
 export const OPEN_QUESTIONS = [
   { n: 1, q: 'How large is the corpus (repos and lines of code, Confluence pages, chat messages per year, Jira issues)?', why: 'Sets budgets, index sizes, sync times, and whether Postgres alone suffices', needed: 'Stage 0' },
   { n: 2, q: 'Which identity provider will you use, and how do users map to their GitLab, Jira, Slack, and Confluence identities?', why: 'ACL enforcement depends on this mapping; unmapped users fail closed', needed: 'Stage 14A (design earlier)' },
-  { n: 3, q: 'Where will this run (cloud or on-premises), and is a GPU available?', why: 'Decides local versus hosted embedders and rerankers', needed: 'Stage 5' },
-  { n: 4, q: 'May code and chat be sent to hosted embedding, rerank, and LLM providers?', why: 'Drives the egress policy and which adapters are allowed per app', needed: 'Stage 5' },
+  { n: 3, q: 'Where will this run (cloud or on-premises), and is a GPU available?', why: 'The embedder decision is settled — EmbeddingGemma 2 runs self-hosted on CPU or consumer GPU — but this still sizes ingestion throughput and decides reranker and Stage 15A visual throughput', needed: 'Stage 5' },
+  { n: 4, q: 'May code and chat be sent to hosted embedding, rerank, and LLM providers?', why: 'Embeddings are self-hosted, so this no longer gates them; it still gates hosted rerank, LLM answers, and any future hosted embedder swap', needed: 'Stage 5' },
   { n: 5, q: 'Are Confluence and Jira Cloud or Data Center, and what are your Slack plan and API limits (API versus export)?', why: 'Changes connector APIs, pagination, and sync strategy', needed: 'Stages 7, 9, 10' },
   { n: 6, q: 'What does the second app’s content look like (formats, volume, sensitivity), and do its collections fit the structured_doc profile?', why: 'Confirms the §6 profile assumptions and whether visual retrieval is needed', needed: 'Stage 14D' },
   { n: 7, q: 'What are the chat privacy and retention rules, and who owns the channel allowlist?', why: 'Determines what is ingested and how long it is kept', needed: 'Stage 9' },
@@ -162,7 +170,7 @@ export const STACK_ROWS = [
   { concern: 'Job queue', choice: 'Postgres-backed (e.g. procrastinate)', notes: 'Avoids adding Redis in v1' },
   { concern: 'Code parsing', choice: 'tree-sitter via py-tree-sitter', notes: 'AST chunking and symbol extraction' },
   { concern: 'Document parsing', choice: 'Docling behind a Parser interface', notes: 'Vision-first parsers pluggable later' },
-  { concern: 'Embeddings', choice: 'Embedder interface; provider chosen in Stage 5', notes: 'Hosted code-aware, hosted general, or local bge-m3 — evaluated in Stage 13' },
+  { concern: 'Embeddings', choice: 'Embedder interface; self-hosted EmbeddingGemma 2 (google/embeddinggemma-2)', notes: 'Dense 768-dim, text and code; images/video/audio share the vector space for Stage 15A. No embedding egress; task prefixes required; hosted embedders stay swappable behind the protocol; truncation measured in Stage 13' },
   { concern: 'Agent LLM', choice: 'Claude via Anthropic API, per app', notes: 'Default claude-sonnet-5-5; enrichment on claude-haiku-5-5 with prompt caching' },
   { concern: 'CI', choice: 'GitLab CI', notes: 'Postgres service container for integration tests' },
 ]
